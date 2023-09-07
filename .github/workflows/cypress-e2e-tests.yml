@@ -1,0 +1,84 @@
+# Copyright Jiaqi Liu
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+name: Frontend E2E Tests
+
+"on":
+  workflow_call:
+
+jobs:
+  list-e2e-test-specs:
+    runs-on: ubuntu-latest
+    outputs:
+      paths: ${{ steps.list-e2e-test-specs.outputs.paths }}
+    steps:
+      - name: List Files
+        id: list-e2e-test-specs
+        uses: mirko-felice/list-files-action@v3.0.5
+        with:
+          repo: ${{ github.repository }}
+          ref: ${{ github.ref }}
+          path: "cypress/e2e"
+          ext: ".ts"
+
+  e2e-tests:
+    name: E2E Tests
+    needs: [list-e2e-test-specs]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [16]
+        test_env: ["dev", "prod"]
+        test_spec: ${{ fromJson(needs.list-e2e-test-specs.outputs.paths) }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set node version to ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Install dependencies
+        run: yarn install
+      - name: Load app environment variables
+        run: mv .env.test .env
+      - name: Run custom setup scripts
+        run: .github/test-setup.sh
+      - name: Run E2E tests in ${{ matrix.test_env }} mode
+        run: |
+          if [[ ${{ matrix.test_env }} == 'dev' ]]; then
+              yarn start &
+              yarn wait-on-dev
+              yarn e2e --spec "${{ matrix.test_spec }}"
+          else
+              yarn build
+              npm install -g serve
+              serve -s dist -l 8080 &
+              yarn wait-on-prod
+              yarn e2e --spec "${{ matrix.test_spec }}"
+          fi
+      - id: extract-spec-filename
+        if: failure()
+        run: |
+          id=$(echo "${{ matrix.test_spec }}" | sed s:/:_:g)
+          echo "::set-output name=id::$id"
+      - name: Upload test videos and screenshots on test failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.test_env }}-${{steps.extract-spec-filename.outputs.id}}-${{ matrix.node_version }}
+          path: |
+            ./cypress/videos
+            ./cypress/screenshots
