@@ -120,8 +120,8 @@ The example below is a very simple setup:
 License
 -------
 
-The use and distribution terms for ***github-actions-workflows*** are covered by the
-[Apache License, Version 2.0][Apache License, Version 2.0].
+The use and distribution terms for [github-management](https://github.com/QubitPi/github-management) are covered by the
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 <div align="center">
     <a href="https://opensource.org/licenses">
@@ -132,15 +132,3 @@ The use and distribution terms for ***github-actions-workflows*** are covered by
 [Apache License, Version 2.0]: http://www.apache.org/licenses/LICENSE-2.0.html
 
 [Sous Chefs' linting action]: https://github.com/sous-chefs/.github/blob/main/.github/workflows/lint-unit.yml
-
-License
--------
-
-The use and distribution terms for [github-management](https://github.com/QubitPi/github-management) are covered by the
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
-
-<div align="center">
-    <a href="https://opensource.org/licenses">
-        <img align="center" width="50%" alt="License Illustration" src="https://github.com/QubitPi/QubitPi/blob/master/img/apache-2.png?raw=true">
-    </a>
-</div>
