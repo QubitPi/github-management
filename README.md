@@ -1,5 +1,42 @@
+GitHub Management <sup>![Python Version Badge is Missing](https://img.shields.io/badge/Python-3.10-brightgreen?style=flat-square&logo=python&logoColor=white)</sup>
+=================
+
+Scripts
+-------
+
+### Setup
+
+1. `git clone https://github.com/QubitPi/github-management.git`
+2. `cd github-management`
+3.[Create a GitHub token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+  with the following scrope
+
+  ![Error loading scope.png](./scope.png)
+
+4. Make the token an OS environment variable with
+
+  ```bash
+  export GITHUB_MANAGEMENT_TOKEN=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
+  ```
+
+5. You are all set!
+
+### Deleting All Labels of a Repo
+
+```bash
+python3 delete-all-labels.py -h
+python3 delete-all-labels.py -o QubitPi -r my-repo
+```
+
+### Create Labels for [Documentation Fork](https://github.com/QubitPi#i-learn-technologies-everyday-through-open-source-)
+
+```bash
+python3 create-label-documentation-fork.py -h
+python3 create-label-documentation-fork.py -o QubitPi -r my-repo
+```
+
 Github Actions Workflows
-========================
+------------------------
 
 ### YAML & Markdown Link
 
@@ -95,3 +132,15 @@ The use and distribution terms for ***github-actions-workflows*** are covered by
 [Apache License, Version 2.0]: http://www.apache.org/licenses/LICENSE-2.0.html
 
 [Sous Chefs' linting action]: https://github.com/sous-chefs/.github/blob/main/.github/workflows/lint-unit.yml
+
+License
+-------
+
+The use and distribution terms for [github-management](https://github.com/QubitPi/github-management) are covered by the
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+
+<div align="center">
+    <a href="https://opensource.org/licenses">
+        <img align="center" width="50%" alt="License Illustration" src="https://github.com/QubitPi/QubitPi/blob/master/img/apache-2.png?raw=true">
+    </a>
+</div>
