@@ -14,6 +14,20 @@
 import argparse
 import os
 import requests
+import logging
+
+# https://stackoverflow.com/a/16630836
+try:
+    import http.client as http_client
+except ImportError:
+    import httplib as http_client
+http_client.HTTPConnection.debuglevel = 1
+
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+requests_log = logging.getLogger("requests.packages.urllib3")
+requests_log.setLevel(logging.DEBUG)
+requests_log.propagate = True
 
 if __name__ == '__main__':
     # https://stackoverflow.com/a/7427376
@@ -26,10 +40,13 @@ if __name__ == '__main__':
     repo_name = args["repo"]
 
     headers = {
-        'Accept': 'application/vnd.github+json',
-        "Authorization": "Bearer " + os.environ['GITHUB_MANAGEMENT_TOKEN']
+        'Accept': 'application/vnd.github+json'
     }
 
     url = "https://api.github.com/repos/{repo_owner}/{repo_name}/labels".format(repo_owner=repo_owner, repo_name=repo_name)
     for label_url in [label["url"] for label in requests.get(url, headers=headers).json()]:
+        headers = {
+            'Accept': 'application/vnd.github+json',
+            "Authorization": "Bearer " + os.environ['GITHUB_MANAGEMENT_TOKEN']
+        }
         requests.delete(label_url, headers=headers)
