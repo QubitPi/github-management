@@ -66,6 +66,28 @@ jobs:
     uses: QubitPi/github-actions-workflows/.github/workflows/yml-and-md-style-checks.yml@master
 ```
 
+### UI Code Style Check
+
+It is a common pattern for all frontend projects to check code syltes with
+
+- [Prettier](https://qubitpi.github.io/prettier/docs/en/install.html), and
+- [ESLint](https://www.npmjs.com/package/eslint)
+
+```yml
+---
+name: My GitHub Workflow
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  code-style:
+    uses: QubitPi/github-actions-workflows/.github/workflows/ui-code-style.yml@master
+```
+
 ### Cypress E2E Tests
 
 **Cypress E2E Tests** offers developers Actions that provide a way to automate, customize, and execute end-to-end tests 

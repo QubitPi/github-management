@@ -12,29 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ---
-name: YAML & Markdown Style
+name: UI Code Style Checks
 
 "on":
   workflow_call:
 
 jobs:
-  yaml-lint:
-    name: YAML Style Check
+  code-style:
+    name: Code Style Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actionshub/yamllint@main
-  markdown-lint:
-    name: Markdown Style Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actionshub/markdownlint@main
-  markdown-link-check:
-    name: Markdown Link Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
-          use-verbose-mode: "yes"
+          fetch-depth: 0
+      - name: Set node version to 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: yarn install
+      - name: Code style check
+        run: yarn prettier . --check
+      - name: ESLint
+        run: yarn eslint .
