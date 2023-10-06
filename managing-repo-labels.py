@@ -119,15 +119,12 @@ def _delete_repo_labels(repo_owner: str, repo_name: str) -> None:
     :param repo_name:
     """
     headers = {
-        'Accept': 'application/vnd.github+json'
+        'Accept': 'application/vnd.github+json',
+        "Authorization": "Bearer " + os.environ['GITHUB_MANAGEMENT_TOKEN']
     }
 
     url = "https://api.github.com/repos/{repo_owner}/{repo_name}/labels".format(repo_owner=repo_owner, repo_name=repo_name)
     for label_url in [label["url"] for label in requests.get(url, headers=headers).json()]:
-        headers = {
-            'Accept': 'application/vnd.github+json',
-            "Authorization": "Bearer " + os.environ['GITHUB_MANAGEMENT_TOKEN']
-        }
         requests.delete(label_url, headers=headers)
 
 def _create_repo_labels(repo_owner: str, repo_name: str, label_to_color: dict[str, str]) -> None:
