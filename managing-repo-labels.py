@@ -27,6 +27,10 @@ transport = AIOHTTPTransport(
 client = Client(transport=transport, fetch_schema_from_transport=True)
 
 
+def _graphql_result_is_empty(results):
+    return len(results["connectionType"]["fields"]["edges"]) == 0
+
+
 def _graphql_paginated_query(repo_owner: str, repo_name: str, query_filename: str, callback, *args):
     """
 
@@ -66,6 +70,9 @@ def _graphql_paginated_query(repo_owner: str, repo_name: str, query_filename: st
             query,
             variable_values={"repo_owner": repo_owner, "repo_name": repo_name, "after": after}
         )
+
+        if _graphql_result_is_empty(results):
+            return query_results
 
         connections = results["connectionType"]["fields"]["edges"]
 
